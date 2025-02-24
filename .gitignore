@@ -1,0 +1,33 @@
+# Node.js-moduler
+node_modules
+
+# Byggfiler
+dist
+build
+
+# Miljöfiler (hemliga uppgifter)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Docker-volymer och data
+docker-data
+docker-compose.override.yml
+
+# Prisma migrationsmappar (om du inte vill commit:a dem)
+prisma/migrations/
+
+# Loggfiler
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE-specifika filer
+.vscode
+.idea
+*.swp
+.DS_Store
+Thumbs.db
