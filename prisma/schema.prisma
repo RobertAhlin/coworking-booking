@@ -1,67 +1,54 @@
-// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-// Users Table
 model User {
-  id        String  @id @default(uuid()) @db.Uuid
-  username  String  @unique
-  email     String  @unique
+  id        String    @id @default(uuid()) @db.Uuid
+  createdAt DateTime  @default(now())
+  email     String    @unique
   password  String
-  role      Role    @default(USER) // RBAC
+  role      Role      @default(USER)
+  updatedAt DateTime  @updatedAt
+  username  String    @unique
   bookings  Booking[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-// Rooms Table
 model Room {
-  id        String  @id @default(uuid()) @db.Uuid
+  id        String    @id @default(uuid()) @db.Uuid
   name      String
   capacity  Int
   type      RoomType
-
+  createdAt DateTime  @default(now())
   bookings  Booking[]
-
-  createdAt DateTime @default(now())
 }
 
-// Bookings Table
 model Booking {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  roomId    String   @db.Uuid
+  id        String        @id @default(uuid()) @db.Uuid
+  userId    String        @db.Uuid
+  roomId    String        @db.Uuid
   startTime DateTime
   endTime   DateTime
   status    BookingStatus @default(PENDING)
-
-  user      User    @relation(fields: [userId], references: [id])
-  room      Room    @relation(fields: [roomId], references: [id])
-
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
+  room      Room          @relation(fields: [roomId], references: [id])
+  user      User          @relation(fields: [userId], references: [id])
 }
 
-// User Roles (RBAC)
 enum Role {
   USER
   ADMIN
 }
 
-// Room Type
 enum RoomType {
   WORKSPACE
   CONFERENCE
 }
 
-// Booking Status
 enum BookingStatus {
   PENDING
   CONFIRMED
