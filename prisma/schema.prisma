@@ -1,3 +1,5 @@
+// prisma/schema.prisma
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -7,8 +9,61 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Users Table
 model User {
-  id   String @id @default(uuid()) @db.Uuid
-  name String
-  age  Int
+  id        String  @id @default(uuid()) @db.Uuid
+  username  String  @unique
+  email     String  @unique
+  password  String
+  role      Role    @default(USER) // RBAC
+  bookings  Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Rooms Table
+model Room {
+  id        String  @id @default(uuid()) @db.Uuid
+  name      String
+  capacity  Int
+  type      RoomType
+
+  bookings  Booking[]
+
+  createdAt DateTime @default(now())
+}
+
+// Bookings Table
+model Booking {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  roomId    String   @db.Uuid
+  startTime DateTime
+  endTime   DateTime
+  status    BookingStatus @default(PENDING)
+
+  user      User    @relation(fields: [userId], references: [id])
+  room      Room    @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// User Roles (RBAC)
+enum Role {
+  USER
+  ADMIN
+}
+
+// Room Type
+enum RoomType {
+  WORKSPACE
+  CONFERENCE
+}
+
+// Booking Status
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
 }

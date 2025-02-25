@@ -1,4 +1,4 @@
-# 🏢 Coworking Space Booking API
+# 🏢 Coworking Space Booking
 
 A backend API for managing workspace and conference room bookings in a coworking space.  
 Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on **Docker**.
