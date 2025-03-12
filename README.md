@@ -115,3 +115,16 @@ The getRooms function retrieves all rooms from the database and returns them in 
 - The Admin role is required to update a room.
 - Any field left out in the request body will retain its original value.
 - If the room ID is invalid or does not exist, the request will return a 404 error.
+
+**Delete room by ID**
+Deletes a room from the database if it exists. Only an admin can perform this action.
+- Extracts Room ID
+    - Gets the room ID from the request parameters (req.params.id).
+- Checks if the Room Exists
+    - Searches the database using prisma.room.findUnique({ where: { id } }).
+    - If no room is found, it returns a 404 Not Found error.
+- Deletes the Room
+    - Calls prisma.room.delete({ where: { id } }) to remove the room from the database.
+- Sends Response
+    - If successful, returns a 200 OK message:
+    - If an error occurs, returns a 500 Internal Server Error.
