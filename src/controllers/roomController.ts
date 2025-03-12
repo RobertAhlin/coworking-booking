@@ -12,7 +12,7 @@ export const createRoom = async (req: Request, res: Response): Promise<void> => 
 
       if (!name || !capacity || !type) {
           res.status(400).json({ error: "All fields (name, capacity, type) are required" });
-          return; // 🔹 Make sure to return `void`
+          return;
       }
 
       const newRoom = await prisma.room.create({
@@ -26,10 +26,21 @@ export const createRoom = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// Placeholder functions
-export const getRooms = (req: Request, res: Response) => {
-  res.status(200).json({ message: "Rooms fetched (not implemented yet)" });
+// Fetch all rooms from the database
+export const getRooms = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const rooms = await prisma.room.findMany();
+
+    res.status(200).json({ message: "Rooms fetched successfully", rooms });
+    return;
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
 };
+
+// Placeholder functions
 
 export const updateRoom = (req: Request, res: Response) => {
   res.status(200).json({ message: "Room updated (not implemented yet)" });
