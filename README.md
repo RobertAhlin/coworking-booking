@@ -67,3 +67,36 @@ The server runs on http://localhost:4444 (configurable via .env).
 │── .gitignore          # Files to exclude from Git  
 │── README.md           # Project documentation  
 ```
+
+# Workflow
+## PostgreSQL Database Setup
+- Ensured PostgreSQL was running in Docker.  
+- Checked that Prisma migrations were applied successfully.  
+- Verified that the database structure was correct.  
+- Inserted test users into the User table.
+
+## Authentication System
+**User Registration** (POST /auth/register)
+- Created endpoint for new users to sign up.
+- Stored user credentials securely using bcrypt for password hashing.
+- Enforced unique emails and usernames.
+
+**User Login** (POST /auth/login)
+- Implemented JWT authentication.
+- Generated a JWT token upon successful login.
+- Ensured password validation using bcrypt.
+
+**User Authentication Middleware** (verifyToken)
+- Implemented middleware to protect routes using JWT tokens.
+- Users must provide a valid token to access protected endpoints.
+
+**Admin Role Check** (isAdmin)
+- Added middleware to restrict Admin-only routes.
+
+## Room Management API (Work in Progress)
+**Created POST /rooms** (Admin only)
+- Implemented logic to add new rooms.
+- Ensured input validation for name, capacity, and type.
+- Stored rooms in the database via Prisma ORM.
+- Verified that only admins can create rooms.
+- Debugged Prisma errors related to the RoomType enum.
