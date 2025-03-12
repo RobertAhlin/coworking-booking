@@ -93,7 +93,7 @@ The server runs on http://localhost:4444 (configurable via .env).
 **Admin Role Check** (isAdmin)
 - Added middleware to restrict Admin-only routes.
 
-## Room Management API (Work in Progress)
+## Room Management API
 **Created POST /rooms** (Admin only)
 - Implemented logic to add new rooms.
 - Ensured input validation for name, capacity, and type.
