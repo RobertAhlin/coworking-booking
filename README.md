@@ -100,3 +100,9 @@ The server runs on http://localhost:4444 (configurable via .env).
 - Stored rooms in the database via Prisma ORM.
 - Verified that only admins can create rooms.
 - Debugged Prisma errors related to the RoomType enum.
+
+**Fetch rooms from database**
+The getRooms function retrieves all rooms from the database and returns them in a JSON response.
+- GET request to /rooms using Postman.
+- The server respons with a list of rooms from the database.
+
