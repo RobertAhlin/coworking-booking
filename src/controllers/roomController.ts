@@ -40,11 +40,39 @@ export const getRooms = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Placeholder functions
+export const updateRoom = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params; // Get room ID from request parameters
+    const { name, capacity, type } = req.body; // Get updated values from request body
 
-export const updateRoom = (req: Request, res: Response) => {
-  res.status(200).json({ message: "Room updated (not implemented yet)" });
+    // Check if the room exists
+    const existingRoom = await prisma.room.findUnique({ where: { id } });
+
+    if (!existingRoom) {
+      res.status(404).json({ error: "Room not found" });
+      return;
+    }
+
+    // Update room in the database
+    const updatedRoom = await prisma.room.update({
+      where: { id },
+      data: {
+        name: name || existingRoom.name, // Keep existing value if no new value provided
+        capacity: capacity || existingRoom.capacity,
+        type: type || existingRoom.type,
+      },
+    });
+
+    res.status(200).json({ message: "Room updated successfully", room: updatedRoom });
+    return;
+  } catch (error) {
+    console.error("Error updating room:", error);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
 };
+
+// Placeholder functions
 
 export const deleteRoom = (req: Request, res: Response) => {
   res.status(200).json({ message: "Room deleted (not implemented yet)" });

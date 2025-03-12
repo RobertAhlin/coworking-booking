@@ -106,3 +106,12 @@ The getRooms function retrieves all rooms from the database and returns them in 
 - GET request to /rooms using Postman.
 - The server respons with a list of rooms from the database.
 
+**Update room details**
+- The function allow an admin to update a room's details.
+- It check:
+    - If the room exists.   
+    - If the request contains valid fields (name, capacity, or type).
+- It should return an error if the room does not exist.
+- The Admin role is required to update a room.
+- Any field left out in the request body will retain its original value.
+- If the room ID is invalid or does not exist, the request will return a 404 error.
