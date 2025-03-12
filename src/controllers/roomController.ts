@@ -72,8 +72,24 @@ export const updateRoom = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// Placeholder functions
+// 🔹 Delete a room (Admin Only)
+export const deleteRoom = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params; // Get the room ID from the request
 
-export const deleteRoom = (req: Request, res: Response) => {
-  res.status(200).json({ message: "Room deleted (not implemented yet)" });
+    // Check if the room exists
+    const existingRoom = await prisma.room.findUnique({ where: { id } });
+    if (!existingRoom) {
+      res.status(404).json({ error: "Room not found" });
+      return
+    }
+
+    // Delete the room
+    await prisma.room.delete({ where: { id } });
+
+    res.status(200).json({ message: "Room deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting room:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
