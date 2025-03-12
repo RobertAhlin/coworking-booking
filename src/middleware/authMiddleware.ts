@@ -1,6 +1,4 @@
-// Users must send a valid JWT token to access protected routes.
-// Admins have special privileges.
-// Middleware verifies the token and attaches user info to req.user
+// src/middleware/authMiddleware.ts
 
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
@@ -15,23 +13,37 @@ interface AuthRequest extends Request {
   user?: { userId: string; role: string };
 }
 
-// 🔹 Middleware to verify JWT token
-export function authenticateUser(req: AuthRequest, res: Response, next: NextFunction): void {
-  const authHeader = req.headers.authorization;
+// Middleware to verify JWT token
+export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.header("Authorization");
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Unauthorized: No token provided" });
-    return;
+  if (!token) {
+      res.status(401).json({ error: "Unauthorized: No token provided" });
+      return;
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-    req.user = decoded; // ✅ Now TypeScript recognizes `user`
-    next();
+      const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET) as { userId: string; role: string };
+      (req as any).user = decoded; // Attach user info to request
+      next();
   } catch (error) {
-    res.status(403).json({ error: "Forbidden: Invalid token" });
-    return;
+      res.status(403).json({ error: "Unauthorized: Invalid token" });
   }
-}
+};
+
+// Middleware to check if user is admin
+export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  if (!(req as any).user || (req as any).user.role !== "ADMIN") {
+      res.status(403).json({ error: "Forbidden: Admin access required" });
+      return;
+  }
+  next();
+};
+
+export const authenticateUser = (req: Request, res: Response, next: NextFunction): void => {
+  if (!(req as any).user) {
+      res.status(401).json({ error: "Unauthorized: User must be logged in" });
+      return;
+  }
+  next();
+};
