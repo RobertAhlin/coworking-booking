@@ -75,3 +75,91 @@ export const getBookings = async (req: AuthRequest, res: Response): Promise<void
       res.status(500).json({ error: "Internal server error" });
     }
   };
+
+  // 🔹 Update booking
+export const updateBooking = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { startTime, endTime } = req.body;
+      const user = req.user;
+  
+      if (!user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+  
+      const existingBooking = await prisma.booking.findUnique({ where: { id } });
+  
+      if (!existingBooking) {
+        res.status(404).json({ error: "Booking not found" });
+        return;
+      }
+  
+      if (user.role !== "ADMIN" && existingBooking.userId !== user.userId) {
+        res.status(403).json({ error: "Forbidden: Not allowed to update this booking" });
+        return;
+      }
+  
+      const overlapping = await prisma.booking.findFirst({
+        where: {
+          roomId: existingBooking.roomId,
+          id: { not: id },
+          AND: [
+            { startTime: { lt: new Date(endTime) } },
+            { endTime: { gt: new Date(startTime) } },
+          ],
+        },
+      });
+
+      if (overlapping) {
+        res.status(400).json({ error: "Room is already booked for that time" });
+        return;
+      }
+  
+      const updated = await prisma.booking.update({
+        where: { id },
+        data: {
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+        },
+      });
+  
+      res.status(200).json({ message: "Booking updated", booking: updated });
+    } catch (error) {
+      console.error("Error updating booking:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+    
+  };
+  
+  // 🔹 Delete booking
+  export const deleteBooking = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const user = req.user;
+  
+      if (!user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+  
+      const booking = await prisma.booking.findUnique({ where: { id } });
+  
+      if (!booking) {
+        res.status(404).json({ error: "Booking not found" });
+        return;
+      }
+  
+      if (user.role !== "ADMIN" && booking.userId !== user.userId) {
+        res.status(403).json({ error: "Forbidden: Not allowed to delete this booking" });
+        return;
+      }
+  
+      await prisma.booking.delete({ where: { id } });
+  
+      res.status(200).json({ message: "Booking deleted" });
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
