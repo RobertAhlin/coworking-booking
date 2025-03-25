@@ -52,30 +52,26 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
 };
 
 // 🔹 Get bookings (User gets their own, Admin gets all)
-export const getBookings = async (req: AuthRequest, res: Response): Promise<Response> => {
-  try {
-    const user = req.user;
-
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    let bookings;
-
-    if (user.role === "ADMIN") {
-      bookings = await prisma.booking.findMany({
-        include: { user: true, room: true },
+export const getBookings = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const user = req.user;
+  
+      if (!user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+  
+      const bookings = await prisma.booking.findMany({
+        where: user.role === "ADMIN" ? {} : { userId: user.userId },
+        include: {
+          room: true,
+          user: user.role === "ADMIN" // bara inkludera användardata för admins
+        },
       });
-    } else {
-      bookings = await prisma.booking.findMany({
-        where: { userId: user.userId },
-        include: { room: true },
-      });
+  
+      res.status(200).json({ bookings });
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
-
-    return res.status(200).json({ bookings });
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
+  };
