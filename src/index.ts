@@ -3,6 +3,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import roomRoutes from "./routes/roomRoutes";
+import bookingRoutes from "./routes/bookingRoutes";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/rooms", roomRoutes);
+app.use("/bookings", bookingRoutes);
 
 const port = process.env.PORT;
 
