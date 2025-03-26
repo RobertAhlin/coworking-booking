@@ -195,6 +195,35 @@ And last I deleted the booking:
 And the results are shown in the the http client:  
 ![Real-time Notifications in browser](Readmefiles/browser-real-time-notices.png)
 
+## Performance Optimization with Redis
+To optimize performance and reduce database load, the application uses Redis to cache frequently accessed data.
+
+**Cached Endpoint:**  
+GET /rooms – This endpoint first checks if room data exists in Redis cache before querying the database.
+
+- If cached data is found, it's returned directly:  
+→ "Rooms fetched from cache"
+
+- If no cached data exists, room data is fetched from the database and stored in Redis for 60 seconds:  
+→ "Rooms fetched from DB"
+
+**Cache Invalidation**  
+To ensure data consistency, the cache is automatically invalidated (deleted) when any of the following operations are performed:
+
+- POST /rooms – Creating a new room
+- PUT /rooms/:id – Updating a room
+- DELETE /rooms/:id – Deleting a room
+
+After invalidation, the next GET /rooms request will fetch fresh data from the database and re-cache it.
+
+**Testing It**  
+Verifying the caching behavior using Postman:  
+Make a GET /rooms request → expect "Rooms fetched from DB"  
+![Get rooms from database](Readmefiles/postman-get-rooms-database_01.png)
+
+New GET withing 60 seconds gives rooms fetched from cache:  
+![Get rooms from cache](Readmefiles/postman-get-rooms-cache_01.png)
+
 # Future Improvements
 - Redis caching for frequently requested data
 - Deployment on cloud platform

@@ -2,36 +2,47 @@
 
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { redis } from "../redis";
 
 const prisma = new PrismaClient();
 
 // 🔹 Create a new room (Admin Only)
 export const createRoom = async (req: Request, res: Response): Promise<void> => {
   try {
-      const { name, capacity, type } = req.body;
+    const { name, capacity, type } = req.body;
 
-      if (!name || !capacity || !type) {
-          res.status(400).json({ error: "All fields (name, capacity, type) are required" });
-          return;
-      }
+    if (!name || !capacity || !type) {
+      res.status(400).json({ error: "All fields (name, capacity, type) are required" });
+      return;
+    }
 
-      const newRoom = await prisma.room.create({
-          data: { name, capacity, type },
-      });
+    const newRoom = await prisma.room.create({
+      data: { name, capacity, type },
+    });
 
-      res.status(201).json({ message: "Room created successfully", room: newRoom });
+    await redis.del("rooms"); // Remove cache so next getRooms fetches fresh data
+
+    res.status(201).json({ message: "Room created successfully", room: newRoom });
   } catch (error) {
-      console.error("Error creating room:", error);
-      res.status(500).json({ error: "Internal server error" });
+    console.error("Error creating room:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-// Fetch all rooms from the database
+// 🔹 Fetch all rooms from the cache or database
 export const getRooms = async (req: Request, res: Response): Promise<void> => {
   try {
-    const rooms = await prisma.room.findMany();
+    const cached = await redis.get("rooms"); // Try to fetch from cache first
+    if (cached) {
+      console.log("🧠 Returning cached rooms");
+      res.status(200).json({ message: "Rooms fetched from cache", rooms: JSON.parse(cached) });
+      return;
+    }
 
-    res.status(200).json({ message: "Rooms fetched successfully", rooms });
+    const rooms = await prisma.room.findMany(); // If not in cache, fetch from DB
+    await redis.set("rooms", JSON.stringify(rooms), "EX", 60); // Cach for 60 seconds
+
+    res.status(200).json({ message: "Rooms fetched from DB", rooms });
     return;
   } catch (error) {
     console.error("Error fetching rooms:", error);
@@ -40,28 +51,28 @@ export const getRooms = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// 🔹 Update a room (Admin Only)
 export const updateRoom = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params; // Get room ID from request parameters
-    const { name, capacity, type } = req.body; // Get updated values from request body
+    const { id } = req.params;
+    const { name, capacity, type } = req.body;
 
-    // Check if the room exists
     const existingRoom = await prisma.room.findUnique({ where: { id } });
-
     if (!existingRoom) {
       res.status(404).json({ error: "Room not found" });
       return;
     }
 
-    // Update room in the database
     const updatedRoom = await prisma.room.update({
       where: { id },
       data: {
-        name: name || existingRoom.name, // Keep existing value if no new value provided
+        name: name || existingRoom.name,
         capacity: capacity || existingRoom.capacity,
         type: type || existingRoom.type,
       },
     });
+
+    await redis.del("rooms"); // Remove cache so next getRooms fetches fresh data
 
     res.status(200).json({ message: "Room updated successfully", room: updatedRoom });
     return;
@@ -75,17 +86,16 @@ export const updateRoom = async (req: Request, res: Response): Promise<void> => 
 // 🔹 Delete a room (Admin Only)
 export const deleteRoom = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params; // Get the room ID from the request
+    const { id } = req.params;
 
-    // Check if the room exists
     const existingRoom = await prisma.room.findUnique({ where: { id } });
     if (!existingRoom) {
       res.status(404).json({ error: "Room not found" });
-      return
+      return;
     }
 
-    // Delete the room
     await prisma.room.delete({ where: { id } });
+    await redis.del("rooms"); // Remove cache so next getRooms fetches fresh data
 
     res.status(200).json({ message: "Room deleted successfully" });
   } catch (error) {
