@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Socket.IO Client</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    h1 { margin-bottom: 1rem; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 0.5rem; }
+    .event-name { font-weight: bold; color: #007acc; }
+    .payload { font-family: monospace; color: #333; }
+  </style>
+</head>
+<body>
+  <h1>📡 Socket.IO Real-time Notifications</h1>
+  <ul id="events"></ul>
+
+  <script>
+    const socket = io("http://localhost:4444");
+
+    const eventsList = document.getElementById("events");
+
+    socket.on("connect", () => {
+      addEvent("connect", { id: socket.id });
+    });
+
+    socket.onAny((event, ...args) => {
+      addEvent(event, args[0]);
+    });
+
+    function addEvent(eventName, payload) {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="event-name">${eventName}:</span> <span class="payload">${JSON.stringify(payload)}</span>`;
+      eventsList.appendChild(li);
+    }
+  </script>
+</body>
+</html>

@@ -128,3 +128,40 @@ Deletes a room from the database if it exists. Only an admin can perform this ac
 - Sends Response
     - If successful, returns a 200 OK message:
     - If an error occurs, returns a 500 Internal Server Error.
+
+
+## Booking Management
+
+**Create Booking**
+- Logged-in users (User/Admin) can create a booking.
+- Double bookings are prevented with proper database checks.  
+
+Body:
+```
+{
+  "roomId": "<room-id>",
+  "startTime": "2025-03-15T10:00:00Z",
+  "endTime": "2025-03-15T12:00:00Z"
+}
+```
+
+**Fetch Bookings**
+- Regular users can only see their own bookings.
+- Admins can see all bookings.
+
+**Update Booking**
+- Users can only update their own bookings.
+- Admins can update any booking.
+- Double booking checks are also performed during updates.
+
+**Delete Booking**
+- Users can delete their own bookings.
+- Admins can delete any booking.  
+All steps tested in Postman:  
+![Postman delete booking](Readmefiles/postman-delete-booking.png)
+
+# Future Improvements
+- Real-time notifications with WebSockets (Socket.io)
+- Redis caching for frequently requested data
+- Deployment on cloud platform
+- Dashboard (front-end)
