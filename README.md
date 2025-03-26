@@ -1,9 +1,9 @@
-# 🏢 Coworking Space Booking
+# Coworking Space Booking
 
 A backend API for managing workspace and conference room bookings in a coworking space.  
 Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on **Docker**.
 
-## 🚀 Features
+## Features
 - User authentication (to be implemented)
 - Workspace & conference room management
 - Booking system with availability checks
@@ -12,47 +12,47 @@ Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on 
 - Environment variable configuration with `.env`
 - TypeScript for type safety
 
-## 🛠️ Technologies Used
+## Technologies Used
 - **Backend:** Node.js, Express, TypeScript
 - **Database:** PostgreSQL (via Docker)
 - **ORM:** Prisma
 - **Containerization:** Docker & Docker Compose
 - **Environment Configuration:** dotenv
 
-## 📦 Project Setup
+## Project Setup
 
-### 1️⃣ Clone the Repository
+### 1️. Clone the Repository
 ```
 git clone https://github.com/yourusername/coworking-booking.git
 cd coworking-booking
 ```
 
-### 2️⃣ Install Dependencies
+### 2️. Install Dependencies
 ```
 npm install
 ```
-### 3️⃣ Start PostgreSQL in Docker
+### 3️. Start PostgreSQL in Docker
 ```
 npm run postgres:start-locally
 ```
 This starts a PostgreSQL container with Docker Compose.
 
-### 4️⃣ Apply Database Migrations
+### 4️. Apply Database Migrations
 ```
 npm run prisma:migrate
 ```
 This initializes the database schema using Prisma.
 
-### 5️⃣ Start the Server
+### 5️. Start the Server
 ```
 npm run dev
 ```
 Runs the server in development mode with nodemon.
 
-### 6️⃣ Test the API
+### 6️. Test the API
 The server runs on http://localhost:4444 (configurable via .env).
 
-## 📁 Project Structure
+## Project Structure
 ```
 /coworking-booking  
 │── /src  
@@ -160,8 +160,42 @@ Body:
 All steps tested in Postman:  
 ![Postman delete booking](Readmefiles/postman-delete-booking.png)
 
+## Real-time Notifications (Socket.IO)
+The platform uses Socket.IO to broadcast real-time notifications to all connected clients whenever a booking is created, updated, or deleted.  
+**Requirements**  
+- A browser or client that supports Socket.IO (v4)
+- Connect to ws://localhost:4444 using the Socket.IO protocol   
+
+Connection Example:
+```
+const socket = io("http://localhost:4444");
+
+socket.on("connect", () => {
+  console.log("Connected with ID:", socket.id);
+});
+```
+**Backend Logic**  
+The events are emitted from bookingController.ts after each respective operation:  
+```
+io.emit("bookingCreated", booking);
+io.emit("bookingUpdated", updated);
+io.emit("bookingDeleted", { id });
+```
+**Testing notification**  
+To be able to test the notifications I build a simple http client.  
+Created a booking in Postman:  
+![Postman create booking](Readmefiles/postman-create-booking_01.png)
+
+I updated the booking:  
+![Postman update booking](Readmefiles/postman-update-booking_01.png)
+
+And last I deleted the booking:  
+![Postman delete booking](Readmefiles/postman-delete-booking_01.png)!
+
+And the results are shown in the the http client:  
+![Real-time Notifications in browser](Readmefiles/browser-real-time-notices.png)
+
 # Future Improvements
-- Real-time notifications with WebSockets (Socket.io)
 - Redis caching for frequently requested data
 - Deployment on cloud platform
 - Dashboard (front-end)
