@@ -197,6 +197,10 @@ And the results are shown in the the http client:
 
 ## Performance Optimization with Redis
 To optimize performance and reduce database load, the application uses Redis to cache frequently accessed data.
+To be more precise used **ioredis** because I found that ioredis is a robust, full-featured Redis client that is used in the world's biggest online commerce company Alibaba and many other awesome companies.
+```
+npm install ioredis
+``` 
 
 **Cached Endpoint:**  
 GET /rooms – This endpoint first checks if room data exists in Redis cache before querying the database.
