@@ -6,6 +6,7 @@ import { Server as SocketIOServer } from "socket.io";
 import authRoutes from "./routes/authRoutes";
 import roomRoutes from "./routes/roomRoutes";
 import bookingRoutes from "./routes/bookingRoutes";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ io.on("connection", (socket) => {
 });
 
 app.use(express.json());
+app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/bookings", bookingRoutes);

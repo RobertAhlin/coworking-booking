@@ -228,6 +228,11 @@ Make a GET /rooms request → expect "Rooms fetched from DB"
 New GET withing 60 seconds gives rooms fetched from cache:  
 ![Get rooms from cache](Readmefiles/postman-get-rooms-cache_01.png)
 
+## Delete users
+
+![Postman user delete user](Readmefiles/postman-user-delete-user_01.png)
+![Postman Admin delete user](Readmefiles/postman-admin-delete-user_01.png)
+
 # Future Improvements
 - Redis caching for frequently requested data
 - Deployment on cloud platform
