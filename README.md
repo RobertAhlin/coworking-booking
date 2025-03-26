@@ -229,11 +229,21 @@ New GET withing 60 seconds gives rooms fetched from cache:
 ![Get rooms from cache](Readmefiles/postman-get-rooms-cache_01.png)
 
 ## Delete users
+Allows an administrator to permanently delete a user account from the system.  
 
+**Authorization**  
+- Requires a valid JWT token in the Authorization header.
+- Only users with the role ADMIN are allowed to access this route.
+
+**Tests**  
+Used Postman to try to delete a user as another user:  
 ![Postman user delete user](Readmefiles/postman-user-delete-user_01.png)
+
+Used Postman to try to delete a user as an Admin:  
 ![Postman Admin delete user](Readmefiles/postman-admin-delete-user_01.png)
 
+Also tested in Postman to delete a none existing user to test the error handling.
+
 # Future Improvements
-- Redis caching for frequently requested data
 - Deployment on cloud platform
-- Dashboard (front-end)
+- Eventually a Dashboard (front-end)
