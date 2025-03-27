@@ -128,27 +128,27 @@ coworking-booking/
 - Stored user credentials securely using bcrypt for password hashing.
 - Enforced unique emails and usernames.
 
-**User Login** (POST /auth/login)
+**User Login** (POST /auth/login)  
 - Implemented JWT authentication.
 - Generated a JWT token upon successful login.
 - Ensured password validation using bcrypt.
 
-**User Authentication Middleware** (verifyToken)
+**User Authentication Middleware** (verifyToken)  
 - Implemented middleware to protect routes using JWT tokens.
 - Users must provide a valid token to access protected endpoints.
 
-**Admin Role Check** (isAdmin)
+**Admin Role Check** (isAdmin)  
 - Added middleware to restrict Admin-only routes.
 
 ## Room Management API
-**Created POST /rooms** (Admin only)
+**Created POST /rooms** (Admin only)  
 - Implemented logic to add new rooms.
 - Ensured input validation for name, capacity, and type.
 - Stored rooms in the database via Prisma ORM.
 - Verified that only admins can create rooms.
 - Debugged Prisma errors related to the RoomType enum.
 
-**Fetch rooms from database**
+**Fetch rooms from database**  
 The getRooms function retrieves all rooms from the database and returns them in a JSON response.
 - GET request to /rooms using Postman.
 - The server respons with a list of rooms from the database.
@@ -179,7 +179,7 @@ Deletes a room from the database if it exists. Only an admin can perform this ac
 
 ## Booking Management
 
-**Create Booking**
+**Create Booking**  
 - Logged-in users (User/Admin) can create a booking.
 - Double bookings are prevented with proper database checks.  
 
@@ -192,16 +192,16 @@ Body:
 }
 ```
 
-**Fetch Bookings**
+**Fetch Bookings**  
 - Regular users can only see their own bookings.
 - Admins can see all bookings.
 
-**Update Booking**
+**Update Booking**  
 - Users can only update their own bookings.
 - Admins can update any booking.
 - Double booking checks are also performed during updates.
 
-**Delete Booking**
+**Delete Booking**  
 - Users can delete their own bookings.
 - Admins can delete any booking.  
 All steps tested in Postman:  
@@ -300,19 +300,19 @@ This project uses Winston as the logging library to keep track of important even
 - Includes timestamps and log levels.
 - Separates general logs and error logs.
 
-**Log Files**
+**Log Files**  
 - logs/combined.log: All logs (info, warn, error, etc.)
 - logs/error.log: Only error level logs 
 - The logs/ directory is automatically created if it doesn't exist.
 
-**Logged Events**
+**Logged Events**  
 The system logs events such as:
 - Successful logins
 - Failed login attempts (wrong email or password)
 - Attempt to access unauthorized routes
 - Errors in controllers (e.g. booking conflicts, missing data)
 
-**Testing logs**
+**Testing logs**  
 I tested the login events.
 - Login whith wrong email
 - Login with wrong password
@@ -339,13 +339,13 @@ Also, I made sure my server dynamically uses Heroku’s assigned port:
 ```
 const port = process.env.PORT
 ```
-**2. PostgreSQL Database (Supabase)**
+**2. PostgreSQL Database (Supabase)**  
 I use Supabase as my PostgreSQL provider. These were the steps I took:
 - Created a Supabase project at supabase.com.
 - Copied the PostgreSQL connection string from Supabase's dashboard.
 - Configured a Heroku environment variable named DATABASE_URL with the provided Supabase connection string.
 
-**3. Configuring Redis Cloud**
+**3. Configuring Redis Cloud**  
 Since my application uses Redis caching, I did the following:  
 - Added the Redis Cloud add-on via the Heroku dashboard (Add-ons section).
 - Configured the environment variable REDISCLOUD_URL using the URL provided by Redis Cloud.  
@@ -357,11 +357,11 @@ import Redis from "ioredis";
 
 const redisUrl = process.env.REDISCLOUD_URL;
 ```
-**4. Real-time Communication (Socket.IO)**
+**4. Real-time Communication (Socket.IO)**  
 - I integrated Socket.IO to enable real-time functionality.  
 - I verified this functionality using a simple [HTML client](https://coworking-booking-robert-d2b5d9a57f6a.herokuapp.com/client.html) hosted within the `/public` folder.
 
-**5. Deployment to Heroku using Git**
+**5. Deployment to Heroku using Git**  
 I deployed the application to Heroku with these commands:
 ```
 git add .
@@ -371,7 +371,7 @@ heroku git:remote -a coworking-booking-robert
 git push heroku main
 ```
 
-**6. Verification and Testing**
+**6. Verification and Testing**  
 After deployment, I checked the Heroku logs to confirm the application was running correctly:
 ```
 heroku logs --tail
@@ -392,7 +392,7 @@ Create a booking:
 ![Postman create booking](Readmefiles/postman-create-booking_02.png)  
  By making these tests I know that the endpoints are working.  
 
-## API Endpoint Summary
+## API Endpoint Summary  
 | Method | Endpoint          | Description              | Auth Required |
 |--------|-------------------|--------------------------|---------------|
 | POST   | `/auth/register`  | User registration        | No            |
