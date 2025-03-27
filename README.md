@@ -383,5 +383,42 @@ Logs confirmed:
 
 ![Heroku log example](Readmefiles/heroku-log_01.png)
 
+## API Endpoint Summary
+| Method | Endpoint          | Description              | Auth Required |
+|--------|-------------------|--------------------------|---------------|
+| POST   | `/auth/register`  | User registration        | No            |
+| POST   | `/auth/login`     | User login               | No            |
+| GET    | `/rooms`          | Get all rooms            | Yes           |
+| POST   | `/rooms`          | Create room (Admin only) | Yes (Admin)   |
+| PUT    | `/rooms/:id`      | Update room (Admin only) | Yes (Admin)   |
+| DELETE | `/rooms/:id`      | Delete room (Admin only) | Yes (Admin)   |
+| POST   | `/bookings`       | Create booking           | Yes           |
+| GET    | `/bookings`       | Get bookings             | Yes           |
+| PUT    | `/bookings/:id`   | Update booking           | Yes           |
+| DELETE | `/bookings/:id`   | Delete booking           | Yes           |
+| DELETE | `/users/:id`      | Delete user (Admin only) | Yes (Admin)   |
+
+## Security Considerations
+- Passwords are hashed using bcrypt.
+- JWT tokens are used for authentication.
+- Protected endpoints use middleware for authentication and authorization.
+- Input validation and sanitization is performed on all endpoints.
+
+## Error Handling
+- API returns appropriate HTTP status codes:
+  - 400: Bad request (validation errors)
+  - 401: Unauthorized (missing or invalid JWT token)
+  - 403: Forbidden (insufficient permissions)
+  - 404: Not Found (invalid IDs or non-existent resources)
+  - 500: Internal Server Error (unexpected errors)
+
+- Errors are logged using Winston in `logs/error.log`.
+
+## Troubleshooting
+- **Port Conflicts:** Ensure ports 5432 (PostgreSQL) and 6379 (Redis) are free before running Docker containers.
+- **Prisma Migrations:** If migrations fail, run `npm run prisma:migrate` again or check the migration logs in your terminal.
+- **Docker Issues:** Restart Docker Desktop if containers fail to start or behave unpredictably.
+- **Redis Connection:** Confirm `REDISCLOUD_URL` in your environment.
+
 # Future Improvements
 - Eventually a Dashboard (front-end)
