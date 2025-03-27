@@ -2,7 +2,7 @@
 
 import { Response } from "express";
 import { AuthRequest } from "../middleware/authMiddleware";
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { io } from "../index";
 import { logger } from "../utils/logger";
 

@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { redis } from "../redis";
+import  redis from "../redis";
 import { logger } from "../utils/logger";
 
 const prisma = new PrismaClient();
