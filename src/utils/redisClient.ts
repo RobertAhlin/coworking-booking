@@ -9,19 +9,27 @@ if (!redisUrl) {
   console.log(`[Redis] Connecting to Redis Cloud at ${new URL(redisUrl).hostname}`);
 }
 
+let errorLogCount = 0;
+const MAX_ERROR_LOGS = 2;
+
 const redis = new Redis(redisUrl ?? "", {
-  // Optional: prevent infinite reconnects
   retryStrategy: (times) => {
     if (times >= 5) {
       console.error("[Redis] ❌ Failed to connect after multiple attempts. Giving up.");
-      return null; // stops trying
+      return null;
     }
-    return Math.min(times * 100, 2000); // retry delay
+    return Math.min(times * 100, 5000); // Retry delay
   },
 });
 
 redis.on("error", (err) => {
-  console.error("[Redis] Connection error:", err.message);
+  if (errorLogCount < MAX_ERROR_LOGS) {
+    console.error("[Redis] Connection error:", err.message);
+    errorLogCount++;
+    if (errorLogCount === MAX_ERROR_LOGS) {
+      console.warn("[Redis] Further errors will be suppressed.");
+    }
+  }
 });
 
 export default redis;
