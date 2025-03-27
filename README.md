@@ -26,31 +26,43 @@ Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on 
 git clone https://github.com/yourusername/coworking-booking.git
 cd coworking-booking
 ```
-
 ### 2️. Install Dependencies
 ```
 npm install
 ```
 ### 3️. Start PostgreSQL in Docker
+(Make sure Docker Desktop is running)
 ```
 npm run postgres:start-locally
 ```
 This starts a PostgreSQL container with Docker Compose.
 
-### 4️. Apply Database Migrations
+### 4. Start Redis in Docker
+```
+npm run redis:start-locally
+```
+This starts a Redis container with Docker.
+
+### 5. Apply Database Migrations
 ```
 npm run prisma:migrate
 ```
 This initializes the database schema using Prisma.
 
-### 5️. Start the Server
+### 6. Start the Server
 ```
 npm run dev
 ```
 Runs the server in development mode with nodemon.
 
-### 6️. Test the API
+### 7. Test the API
 The server runs on http://localhost:4444 (configurable via .env).
+
+### 8. Start Everything Together (Optional)
+If everything has been set up once, you can start PostgreSQL, Redis, and the server at the same time using:   
+```
+npm run all:start
+```
 
 ## Project Structure
 ```

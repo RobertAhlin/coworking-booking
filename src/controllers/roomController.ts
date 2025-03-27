@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { redis } from "../redis";
+import { logger } from "../utils/logger";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +25,7 @@ export const createRoom = async (req: Request, res: Response): Promise<void> => 
 
     res.status(201).json({ message: "Room created successfully", room: newRoom });
   } catch (error) {
-    console.error("Error creating room:", error);
+    logger.error("Error creating room:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -34,7 +35,7 @@ export const getRooms = async (req: Request, res: Response): Promise<void> => {
   try {
     const cached = await redis.get("rooms"); // Try to fetch from cache first
     if (cached) {
-      console.log("🧠 Returning cached rooms");
+      console.log("Returning cached rooms");
       res.status(200).json({ message: "Rooms fetched from cache", rooms: JSON.parse(cached) });
       return;
     }
@@ -45,7 +46,7 @@ export const getRooms = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "Rooms fetched from DB", rooms });
     return;
   } catch (error) {
-    console.error("Error fetching rooms:", error);
+    logger.error("Error fetching rooms:", error);
     res.status(500).json({ error: "Internal server error" });
     return;
   }
@@ -77,7 +78,7 @@ export const updateRoom = async (req: Request, res: Response): Promise<void> => 
     res.status(200).json({ message: "Room updated successfully", room: updatedRoom });
     return;
   } catch (error) {
-    console.error("Error updating room:", error);
+    logger.error("Error updating room:", error);
     res.status(500).json({ error: "Internal server error" });
     return;
   }
@@ -99,7 +100,7 @@ export const deleteRoom = async (req: Request, res: Response): Promise<void> => 
 
     res.status(200).json({ message: "Room deleted successfully" });
   } catch (error) {
-    console.error("Error deleting room:", error);
+    logger.error("Error deleting room:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

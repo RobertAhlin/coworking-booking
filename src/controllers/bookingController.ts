@@ -4,6 +4,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/authMiddleware";
 import { PrismaClient, Role } from "@prisma/client";
 import { io } from "../index";
+import { logger } from "../utils/logger";
 
 const prisma = new PrismaClient();
 
@@ -50,7 +51,7 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
     io.emit("bookingCreated", booking);
     res.status(201).json({ message: "Booking created successfully", booking });
   } catch (error) {
-    console.error("Error creating booking:", error);
+    logger.error("Error creating booking:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -75,7 +76,7 @@ export const getBookings = async (req: AuthRequest, res: Response): Promise<void
 
     res.status(200).json({ bookings });
   } catch (error) {
-    console.error("Error fetching bookings:", error);
+    logger.error("Error fetching bookings:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -131,7 +132,7 @@ export const updateBooking = async (req: AuthRequest, res: Response): Promise<vo
     io.emit("bookingUpdated", updated);
     res.status(200).json({ message: "Booking updated", booking: updated });
   } catch (error) {
-    console.error("Error updating booking:", error);
+    logger.error("Error updating booking:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -164,7 +165,7 @@ export const deleteBooking = async (req: AuthRequest, res: Response): Promise<vo
 
     res.status(200).json({ message: "Booking deleted" });
   } catch (error) {
-    console.error("Error deleting booking:", error);
+    logger.error("Error deleting booking:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

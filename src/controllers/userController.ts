@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { AuthRequest } from "../middleware/authMiddleware";
+import { logger } from "../utils/logger";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,7 @@ export const deleteUser = async (req: AuthRequest, res: Response): Promise<void>
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    logger.error("Error deleting user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

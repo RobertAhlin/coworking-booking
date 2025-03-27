@@ -8,7 +8,9 @@
         "start": "node dist/index.js",
         "dev": "nodemon src/index.ts",
         "prisma:migrate": "prisma migrate dev",
-        "postgres:start-locally": "docker-compose up"
+        "postgres:start-locally": "docker-compose up",
+        "redis:start-locally": "docker run --name redis-server -p 6379:6379 redis",
+        "all:start": "concurrently \"npm run postgres:start-locally\" \"npm run redis:start-locally\" \"npm run dev\""
     },
     "keywords": [],
     "author": "Robert Ahlin",
@@ -31,6 +33,7 @@
         "ioredis": "^5.6.0",
         "jsonwebtoken": "^9.0.2",
         "prisma": "^6.3.1",
-        "socket.io": "^4.8.1"
+        "socket.io": "^4.8.1",
+        "winston": "^3.17.0"
     }
 }
