@@ -18,12 +18,15 @@
   <ul id="events"></ul>
 
   <script>
-    const socket = io("http://localhost:4444");
+    const socket = io();
 
     const eventsList = document.getElementById("events");
 
     socket.on("connect", () => {
       addEvent("connect", { id: socket.id });
+      setInterval(() => {
+      socket.emit("ping every 30 sec", { time: new Date().toISOString() });
+}, 30000);
     });
 
     socket.onAny((event, ...args) => {
