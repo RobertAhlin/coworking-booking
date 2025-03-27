@@ -37,4 +37,5 @@ const port = process.env.PORT;
 
 server.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
+    console.log("REDISCLOUD_URL:", process.env.REDISCLOUD_URL);
 });
