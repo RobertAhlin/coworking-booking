@@ -1,15 +1,17 @@
 # Coworking Space Booking
 
 A backend API for managing workspace and conference room bookings in a coworking space.  
-Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on **Docker**.
+Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on **Docker** while developing locally. The deployed version uses PostgreSQL on Supabase.
 
 ## Features
-- User authentication (to be implemented)
+- User authentication
 - Workspace & conference room management
 - Booking system with availability checks
 - Prisma ORM for database interactions
-- PostgreSQL database running in Docker
-- Environment variable configuration with `.env`
+- PostgreSQL database running in Docker (while developing locally). 
+- Deployed - PostgreSQL database at Supabase
+- Environment variable configuration with `.env` (while developing locally)
+- Deployed - Environment variables is set on Heroku Config vars.
 - TypeScript for type safety
 
 ## Technologies Used
@@ -76,6 +78,8 @@ coworking-booking/
 ├── prisma/
 │   ├── migrations/
 │   └── schema.prisma
+├── public/
+│   └── client.html
 ├── Readmefiles/
 ├── src/
 │   ├── controllers/
@@ -91,7 +95,8 @@ coworking-booking/
 │   │   ├── roomRoutes.ts
 │   │   └── userRoutes.ts
 │   ├── services/
-│   │   └── authService.ts
+│   │   ├── authService.ts
+│   │   └── hashPassword.ts
 │   ├── types/
 │   │   └── express/
 │   │       └── index.d.ts
@@ -102,9 +107,7 @@ coworking-booking/
 │   └── index.ts
 ├── .env
 ├── .gitignore
-├── client.html
 ├── docker-compose.yaml
-├── hashPassword.ts
 ├── nodemon.json
 ├── package.json
 ├── package-lock.json
@@ -160,7 +163,7 @@ The getRooms function retrieves all rooms from the database and returns them in 
 - Any field left out in the request body will retain its original value.
 - If the room ID is invalid or does not exist, the request will return a 404 error.
 
-**Delete room by ID**
+**Delete room by ID**  
 Deletes a room from the database if it exists. Only an admin can perform this action.
 - Extracts Room ID
     - Gets the room ID from the request parameters (req.params.id).
@@ -318,6 +321,67 @@ I tested the login events.
 Looking in logs we can se all attempts has been logged:  
 ![Log example](Readmefiles/log-example_01.png)
 
+# Deploy to Heroku
+Here's a brief summary of the steps I've completed to successfully deploy my backend application to Heroku.
+
+**1. Adapting for Production**  
+I adjusted my package.json scripts for Heroku:
+```
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "heroku-postbuild": "npm run build"
+}
+```
+- ```heroku-postbuild``` ensures TypeScript compilation occurs automatically upon deployment.
+
+Also, I made sure my server dynamically uses Heroku’s assigned port:
+```
+const port = process.env.PORT
+```
+**2. PostgreSQL Database (Supabase)**
+I use Supabase as my PostgreSQL provider. These were the steps I took:
+- Created a Supabase project at supabase.com.
+- Copied the PostgreSQL connection string from Supabase's dashboard.
+- Configured a Heroku environment variable named DATABASE_URL with the provided Supabase connection string.
+
+**3. Configuring Redis Cloud**
+Since my application uses Redis caching, I did the following:  
+- Added the Redis Cloud add-on via the Heroku dashboard (Add-ons section).
+- Configured the environment variable REDISCLOUD_URL using the URL provided by Redis Cloud.  
+- fterward, I ran Prisma migrations to set up my database schema
+
+Created a Redis client (```src/redis.ts```) to connect easily:
+```
+import Redis from "ioredis";
+
+const redisUrl = process.env.REDISCLOUD_URL;
+```
+**4. Real-time Communication (Socket.IO)**
+- I integrated Socket.IO to enable real-time functionality.  
+- I verified this functionality using a simple [HTML client](https://coworking-booking-robert-d2b5d9a57f6a.herokuapp.com/client.html) hosted within the `/public` folder.
+
+**5. Deployment to Heroku using Git**
+I deployed the application to Heroku with these commands:
+```
+git add .
+git commit -m "Commit message"
+heroku login
+heroku git:remote -a coworking-booking-robert
+git push heroku main
+```
+
+**6. Verification and Testing**
+After deployment, I checked the Heroku logs to confirm the application was running correctly:
+```
+heroku logs --tail
+```
+Logs confirmed:
+- The server started successfully.
+- Connection to Redis Cloud was established.
+- Real-time communication via Socket.IO was functional.  
+
+![Heroku log example](Readmefiles/heroku-log_01.png)
+
 # Future Improvements
-- Deployment on cloud platform
 - Eventually a Dashboard (front-end)

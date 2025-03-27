@@ -3,10 +3,8 @@ import Redis from "ioredis";
 
 const redisUrl = process.env.REDISCLOUD_URL;
 
-console.log("[RedisClient] Loaded redis.ts");
-
 if (!redisUrl) {
-  console.error("[Redis] ❌ REDISCLOUD_URL is not defined. Redis will NOT work.");
+  console.error("[Redis] Error: REDISCLOUD_URL is not defined. Redis will NOT work.");
 } else {
   console.log(`[Redis] Connecting to Redis Cloud at ${new URL(redisUrl).hostname}`);
 }
@@ -17,7 +15,7 @@ const MAX_ERROR_LOGS = 2;
 const redis = new Redis(redisUrl ?? "", {
   retryStrategy: (times) => {
     if (times >= 5) {
-      console.error("[Redis] ❌ Failed to connect after multiple attempts. Giving up.");
+      console.error("[Redis] Failed to connect after multiple attempts. Giving up.");
       return null;
     }
     return Math.min(times * 100, 5000); // Retry delay
