@@ -24,6 +24,11 @@ export const io = new SocketIOServer(server, {
 io.on("connection", (socket) => {
   console.log("📡 A client connected:", socket.id);
 
+  socket.on("ping every 5 sec", (data) => {
+    console.log("📨 Received ping from client:", data);
+    socket.emit("pong from server", { receivedAt: new Date().toISOString() });
+  });
+
   socket.on("disconnect", () => {
     console.log("❌ A client disconnected:", socket.id);
   });

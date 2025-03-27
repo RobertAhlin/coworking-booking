@@ -24,13 +24,14 @@
 
     socket.on("connect", () => {
       addEvent("connect", { id: socket.id });
-      setInterval(() => {
-      socket.emit("ping every 30 sec", { time: new Date().toISOString() });
-}, 30000);
+      setInterval(() => {socket.emit("ping every 5 sec", { time: new Date().toISOString() });}, 5000);
     });
 
     socket.onAny((event, ...args) => {
       addEvent(event, args[0]);
+      socket.on("pong from server", (payload) => {
+      addEvent("pong from server", payload);
+});
     });
 
     function addEvent(eventName, payload) {
