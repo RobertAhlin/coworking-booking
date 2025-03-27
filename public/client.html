@@ -27,7 +27,7 @@ socket.on("connect", () => {
 
   setInterval(() => {
     socket.emit("ping every minute", { time: new Date().toISOString() });
-  }, 1000);
+  }, 60000);
 });
 
 // Lyssna på ALLA inkommande events
