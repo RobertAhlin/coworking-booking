@@ -256,6 +256,36 @@ Used Postman to try to delete a user as an Admin:
 
 Also tested in Postman to delete a none existing user to test the error handling.
 
+## Logging
+**Overview**  
+This project uses Winston as the logging library to keep track of important events, errors, and system behavior in a structured and persistent way.
+
+**Features**  
+- Logs both to the console and to files.
+- Includes timestamps and log levels.
+- Separates general logs and error logs.
+
+**Log Files**
+- logs/combined.log: All logs (info, warn, error, etc.)
+- logs/error.log: Only error level logs 
+- The logs/ directory is automatically created if it doesn't exist.
+
+**Logged Events**
+The system logs events such as:
+- Successful logins
+- Failed login attempts (wrong email or password)
+- Attempt to access unauthorized routes
+- Errors in controllers (e.g. booking conflicts, missing data)
+
+**Testing logs**
+I tested the login events.
+- Login whith wrong email
+- Login with wrong password
+- Correct login
+
+Looking in logs we can se all attempts has been logged:  
+![Log example](Readmefiles/log-example_01.png)
+
 # Future Improvements
 - Deployment on cloud platform
 - Eventually a Dashboard (front-end)
