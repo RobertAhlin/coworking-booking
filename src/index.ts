@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes";
 import roomRoutes from "./routes/roomRoutes";
 import bookingRoutes from "./routes/bookingRoutes";
 import userRoutes from "./routes/userRoutes";
+import path from "path";
+
 
 dotenv.config();
 
@@ -32,6 +34,7 @@ app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/bookings", bookingRoutes);
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 const port = process.env.PORT;
 

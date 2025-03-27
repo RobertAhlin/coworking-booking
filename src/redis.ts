@@ -3,7 +3,7 @@ import Redis from "ioredis";
 
 const redisUrl = process.env.REDISCLOUD_URL;
 
-console.log("[RedisClient] Loaded redisClient.ts");
+console.log("[RedisClient] Loaded redis.ts");
 
 if (!redisUrl) {
   console.error("[Redis] ❌ REDISCLOUD_URL is not defined. Redis will NOT work.");
