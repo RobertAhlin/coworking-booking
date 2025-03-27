@@ -66,18 +66,50 @@ npm run all:start
 
 ## Project Structure
 ```
-/coworking-booking  
-│── /src  
-│   ├── index.ts        # Main Express server file  
-│── /prisma  
-│   ├── schema.prisma   # Prisma schema file  
-│── /docker-data        # PostgreSQL volume (ignored in Git)  
-│── .env                # Environment variables (ignored in Git)  
-│── docker-compose.yml  # Docker setup for PostgreSQL  
-│── package.json        # Dependencies & scripts  
-│── tsconfig.json       # TypeScript configuration  
-│── .gitignore          # Files to exclude from Git  
-│── README.md           # Project documentation  
+coworking-booking/
+├── dist/
+├── docker-data/
+├── logs/
+│   ├── combined.log
+│   └── error.log
+├── node_modules/
+├── prisma/
+│   ├── migrations/
+│   └── schema.prisma
+├── Readmefiles/
+├── src/
+│   ├── controllers/
+│   │   ├── authController.ts
+│   │   ├── bookingController.ts
+│   │   ├── roomController.ts
+│   │   └── userController.ts
+│   ├── middleware/
+│   │   └── authMiddleware.ts
+│   ├── routes/
+│   │   ├── authRoutes.ts
+│   │   ├── bookingRoutes.ts
+│   │   ├── roomRoutes.ts
+│   │   └── userRoutes.ts
+│   ├── services/
+│   │   └── authService.ts
+│   ├── types/
+│   │   └── express/
+│   │       └── index.d.ts
+│   ├── utils/
+│   │   ├── logger.ts
+│   │   └── redisClient.ts
+│   ├── redis.ts
+│   └── index.ts
+├── .env
+├── .gitignore
+├── client.html
+├── docker-compose.yaml
+├── hashPassword.ts
+├── nodemon.json
+├── package.json
+├── package-lock.json
+├── README.md
+└── tsconfig.json
 ```
 
 # Workflow
