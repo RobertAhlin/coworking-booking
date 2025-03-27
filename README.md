@@ -383,6 +383,15 @@ Logs confirmed:
 
 ![Heroku log example](Readmefiles/heroku-log_01.png)
 
+Testing of endpoints in Postman:  
+Log in Admin user:  
+![Postman login user](Readmefiles/postman-login-user_01.png)  
+Create a bookable room:  
+![Postman create room](Readmefiles/postman-create-room_01.png)  
+Create a booking:  
+![Postman create booking](Readmefiles/postman-create-booking_02.png)  
+ By making these tests I know that the endpoints are working.  
+
 ## API Endpoint Summary
 | Method | Endpoint          | Description              | Auth Required |
 |--------|-------------------|--------------------------|---------------|
@@ -421,4 +430,4 @@ Logs confirmed:
 - **Redis Connection:** Confirm `REDISCLOUD_URL` in your environment.
 
 # Future Improvements
-- Eventually a Dashboard (front-end)
+- I'm thinkin of eventually create a Dashboard (front-end). Let's see about that.
