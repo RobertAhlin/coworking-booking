@@ -14,7 +14,7 @@
         "all:start": "concurrently \"npm run postgres:start-locally\" \"npm run redis:start-locally\" \"npm run dev\""
     },
     "keywords": [],
-    "author": "Robert Ahlin",
+    "author": "Robert Ahlin 2025",
     "license": "ISC",
     "devDependencies": {
         "concurrently": "^9.1.2",
