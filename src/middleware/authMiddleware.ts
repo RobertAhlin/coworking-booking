@@ -16,19 +16,21 @@ export interface AuthRequest extends Request {
 
 // Middleware to verify JWT token
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
-  const token = req.header("Authorization");
+  const authHeader = req.header("Authorization");
 
-  if (!token) {
-      res.status(401).json({ error: "Unauthorized: No token provided" });
-      return;
+  if (!authHeader || !authHeader.toLowerCase().startsWith("bearer ")) {
+    res.status(401).json({ error: "Unauthorized: No token provided" });
+    return;
   }
 
+  const token = authHeader.split(" ")[1];
+
   try {
-      const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET) as { userId: string; role: Role };
-      (req as AuthRequest).user = decoded;
-      next();
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: Role };
+    (req as AuthRequest).user = decoded;
+    next();
   } catch (error) {
-      res.status(403).json({ error: "Unauthorized: Invalid token" });
+    res.status(403).json({ error: "Unauthorized: Invalid token" });
   }
 };
 
