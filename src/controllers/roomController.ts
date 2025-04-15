@@ -72,7 +72,7 @@ export const updateRoom = async (req: Request, res: Response): Promise<void> => 
         type: type || existingRoom.type,
       },
     });
-
+    console.log("[Redis] Current status:", redis.status);
     await redis.del("rooms"); // Remove cache so next getRooms fetches fresh data
 
     res.status(200).json({ message: "Room updated successfully", room: updatedRoom });

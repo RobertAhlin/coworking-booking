@@ -22,12 +22,20 @@ const redis = new Redis(redisUrl ?? "", {
   },
 });
 
+redis.on("connect", () => {
+  console.log("[Redis] ✅ Connected to Redis Cloud");
+});
+
+redis.on("ready", () => {
+  console.log("[Redis] 🟢 Redis is ready to use");
+});
+
 redis.on("error", (err) => {
   if (errorLogCount < MAX_ERROR_LOGS) {
-    console.error("[Redis] Connection error:", err.message);
+    console.error("[Redis] ❌ Connection error:", err.message);
     errorLogCount++;
     if (errorLogCount === MAX_ERROR_LOGS) {
-      console.warn("[Redis] Further errors will be suppressed.");
+      console.warn("[Redis] ⚠️ Further errors will be suppressed.");
     }
   }
 });
