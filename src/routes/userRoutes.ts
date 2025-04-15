@@ -9,7 +9,7 @@ const router = express.Router();
 // 🔹 Get all users (Admin only)
 router.get("/", verifyToken, isAdmin, getAllUsers);
 
-// 🔹 Delete user (Admin only)
+// 🔹 Delete user by ID (Admin only)
 router.delete("/:id", verifyToken, isAdmin, deleteUser);
 
 export default router;
