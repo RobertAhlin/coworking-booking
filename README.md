@@ -361,7 +361,18 @@ const redisUrl = process.env.REDISCLOUD_URL;
 - I integrated Socket.IO to enable real-time functionality.  
 - I verified this functionality using a simple [HTML client](https://coworking-booking-robert-d2b5d9a57f6a.herokuapp.com/client.html) hosted within the `/public` folder.
 
-**5. Deployment to Heroku using Git**  
+**5. Logging**  
+Since Heroku doesn't handle file systems like log files. The logs from `logger.warn`, `logger.info` is shown in `heroku logs --tail`.  
+This is done with a transport to console in `src/utils/logger.ts`.  
+```
+transports: [
+    new transports.Console(),
+    new transports.File({ filename: "logs/error.log", level: "error" }),
+    new transports.File({ filename: "logs/combined.log" }),
+  ],
+```
+
+**6. Deployment to Heroku using Git**  
 I deployed the application to Heroku with these commands:
 ```
 git add .
@@ -371,7 +382,7 @@ heroku git:remote -a coworking-booking-robert
 git push heroku main
 ```
 
-**6. Verification and Testing**  
+**7. Verification and Testing**  
 After deployment, I checked the Heroku logs to confirm the application was running correctly:
 ```
 heroku logs --tail

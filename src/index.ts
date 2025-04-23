@@ -16,7 +16,7 @@ const app: Express = express();
 const server = http.createServer(app);
 export const io = new SocketIOServer(server, {
   cors: {
-    origin: "*" // Tillåt alla för enkel testning, anpassa för produktion
+    origin: "*"
   }
 });
 
