@@ -101,8 +101,7 @@ coworking-booking/
 │   │   └── express/
 │   │       └── index.d.ts
 │   ├── utils/
-│   │   ├── logger.ts
-│   │   └── redisClient.ts
+│   │   └── logger.ts
 │   ├── redis.ts
 │   └── index.ts
 ├── .env

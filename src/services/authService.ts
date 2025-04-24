@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // Replace with a strong secret
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // Hash the password before saving to DB
 export async function hashPassword(password: string): Promise<string> {
