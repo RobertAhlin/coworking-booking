@@ -24,11 +24,6 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    if (new Date(endTime) <= new Date(startTime)) {
-      res.status(400).json({ error: "End time must be after start time." });
-      return;
-    }
-
     const overlapping = await prisma.booking.findFirst({
       where: {
         roomId,
@@ -107,11 +102,6 @@ export const updateBooking = async (req: AuthRequest, res: Response): Promise<vo
 
     if (user.role !== "ADMIN" && existingBooking.userId !== user.userId) {
       res.status(403).json({ error: "Forbidden: Not allowed to update this booking" });
-      return;
-    }
-
-    if (new Date(endTime) <= new Date(startTime)) {
-      res.status(400).json({ error: "End time must be after start time." });
       return;
     }
 
