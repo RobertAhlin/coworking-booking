@@ -3,6 +3,8 @@
 A backend API for managing workspace and conference room bookings in a coworking space.  
 Built with **TypeScript, Node.js, Express, Prisma, and PostgreSQL**, running on **Docker** while developing locally. The deployed version uses PostgreSQL on Supabase.
 
+Note! The database in Supabase and the caching function with Redis has stopped working because of using free versions with policies that they become disabled or removed when inactive for a week.
+
 ## Features
 - User authentication
 - Workspace & conference room management
